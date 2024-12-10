@@ -13,7 +13,6 @@ return {
     "Zeioth/neon.nvim",
     lazy = false,
     priority = 1000,
-    dependencies = "rktjmp/lush.nvim",
     config = function()
         ColorNvim("neon-cherrykiss-storm")
     end,
