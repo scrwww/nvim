@@ -4,7 +4,7 @@ return {
                 lazy = false,
                 priority= 9999,
                 config=function ()
-                        vim.cmd.colorscheme("carbonfox")
+                        vim.cmd.colorscheme("vague")
                 end
         },
         {
@@ -60,5 +60,8 @@ return {
         },
         {
                 "nyoom-engineering/oxocarbon.nvim",
+        },
+        {
+                "sainnhe/everforest",
         }
 }
