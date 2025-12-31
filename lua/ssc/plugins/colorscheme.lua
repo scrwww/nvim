@@ -4,7 +4,7 @@ return {
                 lazy = false,
                 priority= 9999,
                 config=function ()
-                        vim.cmd.colorscheme("vague")
+                        vim.cmd.colorscheme("kanso-pearl")
                 end
         },
         {
@@ -63,5 +63,8 @@ return {
         },
         {
                 "sainnhe/everforest",
+        },
+        {
+                "webhooked/kanso.nvim",
         }
 }
