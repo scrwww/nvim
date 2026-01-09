@@ -34,6 +34,22 @@ vim.lsp.config['tsserver'] = {
         },
 }
 
+vim.lsp.config('jdtls', {
+  settings = {
+    java = {
+      configuration = {
+        runtimes = {
+          {
+            name = "JavaSE-21",
+            path = "/opt/jdk-21",
+            default = true,
+          }
+        }
+      }
+    }
+  }
+})
+
 local lsp_format_augroup = vim.api.nvim_create_augroup('my.lsp.format', { clear = false })
 local lsp_augroup = vim.api.nvim_create_augroup('my.lsp', { clear = true })
 
