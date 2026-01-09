@@ -9,5 +9,6 @@ require("plugins.flash")
 require("plugins.telescope")
 require("plugins.mason")
 require("plugins.blink")
+require("plugins.java")
 
 vim.cmd.colorscheme("retrobox")

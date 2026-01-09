@@ -1,5 +1,6 @@
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('tsserver')
+vim.lsp.enable('jdtls')
 
 vim.lsp.config['lua_ls'] = {
         cmd = { 'lua-language-server' },
