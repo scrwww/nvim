@@ -50,6 +50,18 @@ vim.lsp.config('jdtls', {
   }
 })
 
+-- autoload the lsp's installed with mason
+require('mason').setup()
+
+require('mason-lspconfig').setup({
+    handlers = {
+        function(server_name)
+            require("lspconfig")[server_name].setup {}
+        end
+    },
+})
+
+
 local lsp_format_augroup = vim.api.nvim_create_augroup('my.lsp.format', { clear = false })
 local lsp_augroup = vim.api.nvim_create_augroup('my.lsp', { clear = true })
 

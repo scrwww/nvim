@@ -23,3 +23,4 @@ vim.o.timeoutlen = 300
 
 vim.o.encoding = "UTF-8"
 vim.diagnostic.config({virtual_text=true})
+
