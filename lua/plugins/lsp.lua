@@ -1,6 +1,16 @@
-vim.lsp.enable('lua_ls')
-vim.lsp.enable('tsserver')
-vim.lsp.enable('jdtls')
+require("mason").setup({
+        registries = {
+                "github:mason-org/mason-registry",
+                "github:Crashdummyy/mason-registry",
+        },
+})
+require('mason-lspconfig').setup({
+        handlers = {
+                function(server_name)
+                        require("lspconfig")[server_name].setup {}
+                end
+        },
+})
 
 vim.lsp.config['lua_ls'] = {
         cmd = { 'lua-language-server' },
@@ -35,92 +45,80 @@ vim.lsp.config['tsserver'] = {
 }
 
 vim.lsp.config('jdtls', {
-  settings = {
-    java = {
-      configuration = {
-        runtimes = {
-          {
-            name = "JavaSE-21",
-            path = "/opt/jdk-21",
-            default = true,
-          }
+        settings = {
+                java = {
+                        configuration = {
+                                runtimes = {
+                                        {
+                                                path = "~/.sdkman/candidates/java/current/bin/java",
+                                                default = true,
+                                        }
+                                }
+                        }
+                }
         }
-      }
-    }
-  }
 })
 
--- autoload the lsp's installed with mason
-require('mason').setup()
+vim.lsp.config('rust_analyzer', {
+        settings = {
+                ['rust-analyzer'] = {},
+        },
+})
 
-require('mason-lspconfig').setup({
-    handlers = {
-        function(server_name)
-            require("lspconfig")[server_name].setup {}
-        end
+vim.lsp.config("roslyn", {
+    on_attach = function()
+        print("This will run when the server attaches!")
+    end,
+    settings = {
+        ["csharp|inlay_hints"] = {
+            csharp_enable_inlay_hints_for_implicit_object_creation = true,
+            csharp_enable_inlay_hints_for_implicit_variable_types = true,
+        },
+        ["csharp|code_lens"] = {
+            dotnet_enable_references_code_lens = true,
+        },
+        ["csharp|completion"] = {
+                dotnet_show_completion_items_from_unimported_namespaces = true,
+                dotnet_provide_regex_completions = true
+        },
+        ["csharp|symbol_search"] = {
+                dotnet_search_reference_assemblies = true
+        },
     },
 })
 
+vim.lsp.enable('lua_ls')
+vim.lsp.enable('tsserver')
+vim.lsp.enable('jdtls')
+vim.lsp.enable('clangd')
 
-local lsp_format_augroup = vim.api.nvim_create_augroup('my.lsp.format', { clear = false })
-local lsp_augroup = vim.api.nvim_create_augroup('my.lsp', { clear = true })
-
-local function on_attach(client, bufnr)
-  -- Disable tsserver formatting
-  if client.name == 'tsserver' then
-    client.server_capabilities.documentFormattingProvider = false
-  end
-
-  -- Inlay hints
-  if client:supports_method('textDocument/inlayHint') then
-    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-  end
-
-  -- Format on save
-  if not client:supports_method('textDocument/willSaveWaitUntil')
-    and client:supports_method('textDocument/formatting') then
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      group = lsp_format_augroup,
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format({
-          bufnr = bufnr,
-          id = client.id,
-          timeout_ms = 1000,
-        })
-      end,
-    })
-  end
-end
+vim.lsp.inlay_hint.enable(true, { not vim.lsp.inlay_hint.is_enabled() })
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = lsp_augroup,
-  callback = function(args)
-    local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-    on_attach(client, args.buf)
-  end,
+        group = vim.api.nvim_create_augroup('my.lsp', {}),
+        callback = function(ev)
+                local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+                if client:supports_method('textDocument/implementation') then
+                        -- Create a keymap for vim.lsp.buf.implementation ...
+                end
+                -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
+                if client:supports_method('textDocument/completion') then
+                        -- Optional: trigger autocompletion on EVERY keypress. May be slow!
+                        -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+                        -- client.server_capabilities.completionProvider.triggerCharacters = chars
+                        vim.lsp.completion.enable(true, client.id, ev.buf, {autotrigger = true})
+                end
+                -- Auto-format ("lint") on save.
+                -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
+                if not client:supports_method('textDocument/willSaveWaitUntil')
+                        and client:supports_method('textDocument/formatting') then
+                        vim.api.nvim_create_autocmd('BufWritePre', {
+                                group = vim.api.nvim_create_augroup('my.lsp', {clear=false}),
+                                buffer = ev.buf,
+                                callback = function()
+                                        vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 1000 })
+                                end,
+                        })
+                end
+        end,
 })
-
--- vim.api.nvim_create_autocmd('LspAttach', {
---         group = vim.api.nvim_create_augroup('my.lsp', {}),
---         callback = function(args)
---                 local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
---                 if client:supports_method('textDocument/completion') then
---                         vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
---                 end
---
---                 -- Auto-format ("lint") on save.
---                 -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
---                 if not client:supports_method('textDocument/willSaveWaitUntil')
---                     and client:supports_method('textDocument/formatting') then
---                         vim.api.nvim_create_autocmd('BufWritePre', {
---                                 group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
---                                 buffer = args.buf,
---                                 callback = function()
---                                         vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
---                                 end,
---                         })
---                 end
---         end,
--- })
--- vim.cmd("set completeopt+=noselect")
