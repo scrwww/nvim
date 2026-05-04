@@ -1,3 +1,23 @@
+vim.lsp.config["jdtls"] = {
+        settings = {
+                java = {
+                        configuration = {
+                                runtimes = {
+                                        {
+                                                name = "JavaSE-Current",
+                                                path = vim.fn.expand("~/.sdkman/candidates/java/current"),
+                                                default = true,
+                                        },
+                                        {
+                                                name = "JavaSE-17",
+                                                path = vim.fn.expand("~/.sdkman/candidates/java/17.0.14-jbr"),
+                                        },
+                                },
+                        },
+                },
+        },
+}
+
 require("java").setup({
         -- Startup checks
         checks = {
@@ -5,10 +25,10 @@ require("java").setup({
                 nvim_jdtls_conflict = true, -- Check for nvim-jdtls conflict
         },
 
-        -- JDTLS configuration
-        jdtls = {
-                version = "1.43.0",
-        },
+        -- -- JDTLS configuration
+        -- jdtls = {
+        --         version = "1.43.0",
+        -- },
 
         -- Extensions
         lombok = {
@@ -33,8 +53,8 @@ require("java").setup({
 
         -- JDK installation
         jdk = {
+                path = vim.fn.expand("~/.sdkman/candidates/java/current"),
                 auto_install = false,
-                version = "17",
         },
 
         -- Logging
