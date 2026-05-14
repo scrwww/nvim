@@ -11,12 +11,12 @@ vim.pack.add({
         { src = "https://github.com/nyoom-engineering/oxocarbon.nvim" },
         { src = "https://github.com/kepano/flexoki-neovim" },
         { src = "https://github.com/folke/tokyonight.nvim" },
+        { src = "https://github.com/nordtheme/vim" },
 
         -- lsp and utils
         { src = "https://github.com/nvim-treesitter/nvim-treesitter",          version = "main" },
         { src = "https://github.com/nvim-mini/mini.nvim" },
         { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
-
 
         { src = "https://github.com/neovim/nvim-lspconfig" },
         { src = "https://github.com/mason-org/mason.nvim" },
@@ -27,17 +27,17 @@ vim.pack.add({
         { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
         { src = "https://github.com/hrsh7th/cmp-buffer" },
 
+        -- csharp
         { src = "https://github.com/seblyng/roslyn.nvim" },
         { src = "https://github.com/MunifTanjim/nui.nvim" },
 
+        -- leetcode
         { src = "https://github.com/kawre/leetcode.nvim" },
         { src = "https://github.com/3rd/image.nvim" },
 
         -- java
-        { src = 'https://github.com/JavaHello/spring-boot.nvim',               version = '218c0c26c14d99feca778e4d13f5ec3e8b1b60f0', },
-        { src = "https://github.com/MunifTanjim/nui.nvim" },
-        { src = "https://github.com/mfussenegger/nvim-dap" },
-        { src = "https://github.com/nvim-java/nvim-java" },
+        { src = "https://github.com/mfussenegger/nvim-jdtls" },
+
 })
 -- load plugin configs
 require("plugins.flash")
@@ -46,4 +46,3 @@ require("plugins.leetcode")
 require("plugins.image")
 require("plugins.lsp")
 require("plugins.render-markdown")
-require("plugins.java")

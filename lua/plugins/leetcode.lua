@@ -3,7 +3,7 @@ require("leetcode").setup({
         arg = "leetcode.nvim",
 
         ---@type lc.lang
-        lang = "csharp",
+        lang = "go",
 
         cn = { -- leetcode.cn
                 enabled = false, ---@type boolean
@@ -18,9 +18,7 @@ require("leetcode").setup({
         },
 
         ---@type table<string, boolean>
-        plugins = {
-                non_standalone = false,
-        },
+        plugins = { },
 
         ---@type boolean
         logging = true,
@@ -90,7 +88,14 @@ require("leetcode").setup({
         },
 
         ---@type lc.highlights
-        theme = {},
+        theme = {
+               ["alt"] = {
+                        bg = "#FFFFFF",
+                },
+                ["normal"] = {
+                        fg = "#EA4AAA",
+                },
+        },
 
         ---@type boolean
         image_support = true,

@@ -78,13 +78,60 @@ vim.lsp.config["clangd"] = {
         capabilities = capabilities,
 }
 
+vim.lsp.config["jdtls"] = {
+        capabilities = capabilities,
+        settings = {
+                java = {
+                        configuration = {
+                                runtimes = {
+                                        {
+                                                name = "JavaSE-Current",
+                                                path = vim.fn.expand("~/.sdkman/candidates/java/current"),
+                                                default = true,
+                                        },
+                                        {
+                                                name = "JavaSE-17",
+                                                path = vim.fn.expand("~/.sdkman/candidates/java/17.0.14-jbr"),
+                                        },
+                                },
+                        },
+                },
+        },
+        cmd = { "jdtls" },
+        init_options = {
+                extendedClientCapabilities = {
+                        actionableRuntimeNotificationSupport = true,
+                        advancedExtractRefactoringSupport = true,
+                        advancedGenerateAccessorsSupport = true,
+                        advancedIntroduceParameterRefactoringSupport = true,
+                        advancedOrganizeImportsSupport = true,
+                        advancedUpgradeGradleSupport = true,
+                        classFileContentsSupport = true,
+                        clientDocumentSymbolProvider = true,
+                        clientHoverProvider = false,
+                        executeClientCommandSupport = true,
+                        extractInterfaceSupport = true,
+                        generateConstructorsPromptSupport = true,
+                        generateDelegateMethodsPromptSupport = true,
+                        generateToStringPromptSupport = true,
+                        gradleChecksumWrapperPromptSupport = true,
+                        hashCodeEqualsPromptSupport = true,
+                        inferSelectionSupport = { "extractConstant", "extractField", "extractInterface", "extractMethod", "extractVariableAllOccurrence", "extractVariable" },
+                        moveRefactoringSupport = true,
+                        onCompletionItemSelectedCommand = "editor.action.triggerParameterHints",
+                        overrideMethodsPromptSupport = true
+                }
+
+        },
+}
+
 require("mason-lspconfig").setup({
         handlers = {
                 function(server_name)
                         -- Skip jdtls cause handled by nvim-java
-                        if server_name == "jdtls" then
-                                return
-                        end
+                        -- if server_name == "jdtls" then
+                        --         return
+                        -- end
                         -- Use vim.lsp.enable to start servers with configurations from vim.lsp.config
                         vim.lsp.enable(server_name)
                 end
@@ -122,6 +169,8 @@ require("roslyn").setup({})
 
 -- Global LSP settings for each of the servers
 -- Inlay hints are enabled globally, but its done after all other configs, for performance!
+-- But I found a problem, thats probably a conflict with nvim-java
+-- FIXED BY JUST DOING JDTLS MANUALLY LETS HGOOOOOOOOOOOO
 vim.lsp.inlay_hint.enable(true)
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -139,25 +188,26 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
 
                 -- refresh codelens on enter/leave insert to pull diagnostics/lenses
-                if client:supports_method("textDocument/codeLens") then
-                        vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
-                                group = vim.api.nvim_create_augroup("my.lsp.codelens", { clear = false }),
-                                buffer = ev.buf,
-                                callback = function()
-                                        vim.lsp.codelens.refresh()
-                                end,
-                        })
-                end
+                -- not necessary anymore, apparently
+                -- if client:supports_method("textDocument/codeLens") then
+                --         vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+                --                 group = vim.api.nvim_create_augroup("my.lsp.codelens", { clear = false }),
+                --                 buffer = ev.buf,
+                --                 callback = function()
+                --                         vim.lsp.codelens.refresh
+                --                 end,
+                --         })
+                -- end
 
-                if not client:supports_method("textDocument/willSaveWaitUntil")
-                    and client:supports_method("textDocument/formatting") then
-                        vim.api.nvim_create_autocmd("BufWritePre", {
-                                group = vim.api.nvim_create_augroup("my.lsp.format." .. ev.buf, { clear = true }),
-                                buffer = ev.buf,
-                                callback = function()
-                                        vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 1000 })
-                                end,
-                        })
-                end
+                -- if not client:supports_method("textDocument/willSaveWaitUntil")
+                --     and client:supports_method("textDocument/formatting") then
+                --         vim.api.nvim_create_autocmd("BufWritePre", {
+                --                 group = vim.api.nvim_create_augroup("my.lsp.format." .. ev.buf, { clear = true }),
+                --                 buffer = ev.buf,
+                --                 callback = function()
+                --                         vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 200 })
+                --                 end,
+                --         })
+                -- end
         end,
 })

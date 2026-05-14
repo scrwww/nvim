@@ -1,6 +1,6 @@
 require("image").enable()
 require("image").setup({
-        backend = "kitty",        -- or "ueberzug" or "sixel"
+        backend = "sixel",        -- or "ueberzug" or "sixel"
         processor = "magick_cli", -- or "magick_rock"
         integrations = {
                 markdown = {
