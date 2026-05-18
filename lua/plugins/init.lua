@@ -3,7 +3,6 @@ vim.pack.add({
         { src = "https://github.com/nvim-telescope/telescope.nvim" },
         { src = "https://github.com/nvim-lua/plenary.nvim" },
         { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
-        { src = "https://github.com/folke/flash.nvim" },
 
         -- theme
         { src = "https://github.com/xiyaowong/transparent.nvim" },
@@ -17,6 +16,7 @@ vim.pack.add({
         { src = "https://github.com/nvim-treesitter/nvim-treesitter",          version = "main" },
         { src = "https://github.com/nvim-mini/mini.nvim" },
         { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+        { src = "https://github.com/nvim-tree/nvim-web-devicons" },
 
         { src = "https://github.com/neovim/nvim-lspconfig" },
         { src = "https://github.com/mason-org/mason.nvim" },
@@ -40,8 +40,8 @@ vim.pack.add({
 
 })
 -- load plugin configs
-require("plugins.flash")
 require("plugins.telescope")
+require("plugins.devicons")
 require("plugins.leetcode")
 require("plugins.image")
 require("plugins.lsp")
