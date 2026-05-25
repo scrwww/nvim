@@ -24,5 +24,7 @@ vim.o.timeoutlen = 300
 vim.o.encoding = "UTF-8"
 vim.diagnostic.config({ virtual_text = true, update_in_insert = true, severity_sort = true })
 
+vim.o.autocomplete = true
+vim.o.completeopt = "menu,menuone,noselect,noinsert,fuzzy,popup"
 vim.lsp.codelens.enable()
-vim.o.pumborder = 'rounded'
+vim.o.pumborder = "rounded"

@@ -1,29 +1,31 @@
-local cmp = require "cmp"
-cmp.setup({
-        snippet = {
-                expand = function(args)
-                        vim.snippet.expand(args.body)
-                end,
-        },
-        window = {
-                completion = cmp.config.window.bordered(),
-                documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert({
-                ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-                ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                ["<C-Space>"] = cmp.mapping.complete(),
-                ["<C-e>"] = cmp.mapping.abort(),
-                ["<CR>"] = cmp.mapping.confirm({ select = true }),
-        }),
-        sources = cmp.config.sources({
-                { name = "nvim_lsp" },
-        }, {
-                { name = "buffer" },
-        })
-})
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- local cmp = require "cmp"
+-- cmp.setup({
+--         snippet = {
+--                 expand = function(args)
+--                         vim.snippet.expand(args.body)
+--                 end,
+--         },
+--         window = {
+--                 completion = cmp.config.window.bordered(),
+--                 documentation = cmp.config.window.bordered(),
+--         },
+--         mapping = cmp.mapping.preset.insert({
+--                 ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+--                 ["<C-f>"] = cmp.mapping.scroll_docs(4),
+--                 ["<C-Space>"] = cmp.mapping.complete(),
+--                 ["<C-e>"] = cmp.mapping.abort(),
+--                 ["<CR>"] = cmp.mapping.confirm({ select = true }),
+--         }),
+--         sources = cmp.config.sources({
+--                 { name = "nvim_lsp" },
+--         }, {
+--                 { name = "buffer" },
+--         })
+-- })
+--
+-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+--
+local capabilities = vim.lsp.protocol.make_client_capabilities();
 
 require("mason").setup({
         registries = {
@@ -165,8 +167,6 @@ vim.lsp.config["roslyn"] = {
         },
 }
 
-require("roslyn").setup({})
-
 -- Global LSP settings for each of the servers
 -- Inlay hints are enabled globally, but its done after all other configs, for performance!
 -- But I found a problem, thats probably a conflict with nvim-java
@@ -177,37 +177,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("my.lsp", { clear = true }),
         callback = function(ev)
                 local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+                if client:supports_method("textDocument/completion") then
+                        vim.lsp.completion.enable(true, client.id, ev.buf, {autotrigger = true})
+                        vim.keymap.set("i", "<C-Space>", function()
+                                vim.lsp.completion.get()
+                        end)
+                end
 
                 -- buf keymaps
                 local opts = { buffer = ev.buf }
-                vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-                vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-                vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-                vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-                vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
-
-                -- refresh codelens on enter/leave insert to pull diagnostics/lenses
-                -- not necessary anymore, apparently
-                -- if client:supports_method("textDocument/codeLens") then
-                --         vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
-                --                 group = vim.api.nvim_create_augroup("my.lsp.codelens", { clear = false }),
-                --                 buffer = ev.buf,
-                --                 callback = function()
-                --                         vim.lsp.codelens.refresh
-                --                 end,
-                --         })
-                -- end
-
-                -- if not client:supports_method("textDocument/willSaveWaitUntil")
-                --     and client:supports_method("textDocument/formatting") then
-                --         vim.api.nvim_create_autocmd("BufWritePre", {
-                --                 group = vim.api.nvim_create_augroup("my.lsp.format." .. ev.buf, { clear = true }),
-                --                 buffer = ev.buf,
-                --                 callback = function()
-                --                         vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 200 })
-                --                 end,
-                --         })
-                -- end
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
         end,
 })
