@@ -78,10 +78,12 @@ vim.lsp.config["markdown_oxide"] = {
 
 vim.lsp.config["clangd"] = {
         capabilities = capabilities,
+        filetypes = { "c", "ll" }
 }
 
 vim.lsp.config["jdtls"] = {
         capabilities = capabilities,
+        cmd = { "jdtls" },
         settings = {
                 java = {
                         configuration = {
@@ -99,7 +101,6 @@ vim.lsp.config["jdtls"] = {
                         },
                 },
         },
-        cmd = { "jdtls" },
         init_options = {
                 extendedClientCapabilities = {
                         actionableRuntimeNotificationSupport = true,

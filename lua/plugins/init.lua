@@ -5,8 +5,7 @@ vim.pack.add({
         { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
 
         -- theme
-        { src = "https://github.com/xiyaowong/transparent.nvim" },
-        { src = "https://github.com/nordtheme/vim" },
+        { src = "https://github.com/oskarnurm/koda.nvim" },
 
         -- lsp and utils
         { src = "https://github.com/nvim-treesitter/nvim-treesitter",          version = "main" },

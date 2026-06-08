@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "koda.nvim": {
+      "rev": "ac7e746882b31a68bdcd533464a20ca40b712bcb",
+      "src": "https://github.com/oskarnurm/koda.nvim"
+    },
     "mason-lspconfig.nvim": {
       "rev": "3d89e7c92fbd96c5e10e0298fc2b006f21cf9428",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
@@ -32,14 +36,6 @@
     "telescope.nvim": {
       "rev": "3333a52ff548ba0a68af6d8da1e54f9cd96e9179",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
-    },
-    "transparent.nvim": {
-      "rev": "8ac59883de84e9cd1850ea25cf087031c5ba7d54",
-      "src": "https://github.com/xiyaowong/transparent.nvim"
-    },
-    "vim": {
-      "rev": "f13f5dfbb784deddbc1d8195f34dfd9ec73e2295",
-      "src": "https://github.com/nordtheme/vim"
     }
   }
 }
