@@ -1,4 +1,6 @@
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>e", vim.cmd.Oil)
+
+vim.keymap.set("n", "<leader>cd", ":tabnew<C-M>:tcd ~/obss/")
 
 -- vim.keymap.set("n", "<S-h>", ":bprevious<CR>", { desc = "Previous buffer", noremap = true, silent = true })
 -- vim.keymap.set("n", "<S-l>", ":bnext<CR>", { desc = "Next buffer", noremap = true, silent = true })
